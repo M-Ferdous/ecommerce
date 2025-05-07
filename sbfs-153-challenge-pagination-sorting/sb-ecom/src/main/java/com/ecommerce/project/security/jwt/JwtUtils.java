@@ -59,8 +59,6 @@ public class JwtUtils {
 
     public String generateTokenFromUsername(String username) {
         return Jwts.builder()
-                .setSubject(username)  // ✅ FIXED: setSubject()
-                .setIssuedAt(new Date())  // ✅ FIXED: setIssuedAt()
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))  // ✅ FIXED: setExpiration()
                 .signWith(key())
                 .compact();
@@ -68,13 +66,11 @@ public class JwtUtils {
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key())  // ✅ use setSigningKey() in 0.11.x
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
-
 
 
     private Key key() {
@@ -85,7 +81,6 @@ public class JwtUtils {
         try {
             System.out.println("Validate");
             Jwts.parserBuilder()
-                    .setSigningKey(key())  // ✅ use setSigningKey() in 0.11.x
                     .build()
                     .parseClaimsJws(authToken);
             return true;
